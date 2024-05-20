@@ -55,5 +55,3 @@ public class _03_Numbered_Game_Voina {
     }
 }
 
-    }
-}
