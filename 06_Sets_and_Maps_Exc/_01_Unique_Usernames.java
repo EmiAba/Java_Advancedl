@@ -12,7 +12,7 @@ public class _01_Unique_Usernames {
         Set<String> names=new LinkedHashSet<>();
 
 
-        for (int i = 1; i <=n ; i++) {
+        for (int i = 0; i <n ; i++) {
             names.add(scanner.nextLine());
 
         }
