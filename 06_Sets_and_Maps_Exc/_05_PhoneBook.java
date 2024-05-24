@@ -7,32 +7,35 @@ public class _05_PhoneBook {
         Scanner scanner = new Scanner(System.in);
         Map<String, String> phonebook = new HashMap<>();
 
-        while (true) {
-            String input = scanner.nextLine();
+     String input= scanner.nextLine();
 
-            if (input.equals("search")) {
-                break;
-            }
 
-            String[] parts = input.split("-");
-            String name = parts[0];
-            String number = parts[1];
+     while(!input.equals("search")){
+         String[] data=input.split("-");
+         String name=data[0];
+         String phoneNumber=data[1];
 
-            phonebook.put(name, number);
-        }
+    phonebook.put(name, phoneNumber);
 
-        while (true) {
-            String searchName = scanner.nextLine();
+      input= scanner.nextLine();
 
-            if (searchName.equals("stop")) {
-                break;
-            }
+     }
 
-            if (phonebook.containsKey(searchName)) {
-                System.out.println(searchName + " -> " + phonebook.get(searchName));
-            } else {
-                System.out.println("Contact " + searchName + " does not exist.");
-            }
-        }
+     String name=scanner.nextLine();
+
+     while(!name.equals("stop")){
+
+         if(phonebook.containsKey(name)){
+             System.out.printf("%s -> %s%n", name, phonebook.get(name));
+
+         }else{
+             System.out.printf("Contact %s does not exist.%n", name);
+         }
+
+         name= scanner.nextLine();
+     }
+
+
+
     }
 }
