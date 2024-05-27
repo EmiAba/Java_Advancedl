@@ -1,51 +1,49 @@
 package F1_Stacks_and_Queues_Lab;
 
 import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.PriorityQueue;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class _07_Math_Potato {
     public static void main(String[] args) {
 
-            Scanner scanner = new Scanner(System.in);
-            String[] children = scanner.nextLine().split(" ");
-            int numberOfTurns = Integer.parseInt(scanner.nextLine());
-            ArrayDeque<String> childrenQueue = new ArrayDeque<>();
+        Scanner scanner = new Scanner(System.in);
 
-            for (String child : children) {
-                childrenQueue.offer(child);
+        PriorityQueue<String> queue = Arrays.stream(scanner.nextLine().split("\\s+"))
+                .collect(Collectors.toCollection(PriorityQueue::new));
+
+        int n = Integer.parseInt(scanner.nextLine());
+        int cycle = 1;
+        while (queue.size() > 1) {
+            for (int i = 1; i < n; i++) {
+                queue.offer(queue.poll());
             }
-
-            int cycle = 1;
-            while (childrenQueue.size() != 1) {
-                for (int i = 1; i < numberOfTurns; i++) {
-                    String currentChild = childrenQueue.poll();
-                    if (currentChild != null) {
-                        childrenQueue.offer(currentChild);
-                    }
-                }
-
-                if (isPrime(cycle)) {
-                    System.out.println("Prime " + childrenQueue.peek());
-                } else {
-                    System.out.println("Removed " + childrenQueue.pop());
-                }
-                cycle++;
+            if (isPrime(cycle)) {
+                System.out.println("Prime " + queue.peek());
+            } else {
+                System.out.println("Removed " + queue.poll());
             }
-            String lastChild = childrenQueue.peek();
-            System.out.printf("Last is %s", lastChild);
+            cycle++;
         }
 
-        static boolean isPrime ( int n){
-            if (n <= 1)
-                return false;
-            else if (n == 2)
-                return true;
-            else if (n % 2 == 0)
-                return false;
-            for (int i = 3; i <= Math.sqrt(n); i += 2) {
-                if (n % i == 0)
-                    return false;
-            }
-            return true;
-        }
+        System.out.println("Last is " + queue.poll());
     }
+
+    static boolean isPrime(int cycle) {
+        if (cycle <= 1) {
+            return false;
+        } else if (cycle == 2) {
+            return true;
+        } else if (cycle % 2 == 0) {
+            return false;
+        }
+        for (int i = 3; i <= Math.sqrt(cycle); i += 2) {
+            if (cycle % i == 0)
+                return false;
+        }
+        return true;
+    }
+        }
+
