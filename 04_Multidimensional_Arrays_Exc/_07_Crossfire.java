@@ -14,14 +14,14 @@ public class _07_Crossfire {
         scanner.nextLine(); // Consume newline
 
         // Initialize matrix
-        int[][] matrix = new int[rows][cols];
-        boolean[][] destroyed = new boolean[rows][cols];
+        List<List<Integer>> matrix = new ArrayList<>();
         int value = 1;
         for (int i = 0; i < rows; i++) {
+            List<Integer> row = new ArrayList<>();
             for (int j = 0; j < cols; j++) {
-                matrix[i][j] = value++;
-                destroyed[i][j] = false;
+                row.add(value++);
             }
+            matrix.add(row);
         }
 
         // Process destruction commands
@@ -33,37 +33,49 @@ public class _07_Crossfire {
             int radius = Integer.parseInt(parts[2]);
 
             // Destroy cells in a cross-like pattern
-            for (int r = targetRow - radius; r <= targetRow + radius; r++) {
-                if (r >= 0 && r < rows && targetCol >= 0 && targetCol < cols) {
-                    destroyed[r][targetCol] = true;
-                }
-            }
-            for (int c = targetCol - radius; c <= targetCol + radius; c++) {
-                if (targetRow >= 0 && targetRow < rows && c >= 0 && c < cols) {
-                    destroyed[targetRow][c] = true;
-                }
-            }
+            destroyCells(matrix, targetRow, targetCol, radius);
         }
 
         // Print the final state of the matrix
-        for (int i = 0; i < rows; i++) {
-            List<Integer> currentRow = new ArrayList<>();
-            for (int j = 0; j < cols; j++) {
-                if (!destroyed[i][j]) {
-                    currentRow.add(matrix[i][j]);
-                }
-            }
-            if (!currentRow.isEmpty()) {
-                for (int k = 0; k < currentRow.size(); k++) {
-                    if (k > 0) {
-                        System.out.print(" ");
-                    }
-                    System.out.print(currentRow.get(k));
-                }
-                System.out.println();
+        printMatrix(matrix);
+
+        scanner.close();
+    }
+
+    private static void destroyCells(List<List<Integer>> matrix, int targetRow, int targetCol, int radius) {
+        // Destroy vertical cells
+        for (int r = Math.max(0, targetRow - radius); r <= Math.min(matrix.size() - 1, targetRow + radius); r++) {
+            if (targetCol >= 0 && targetCol < matrix.get(r).size()) {
+                matrix.get(r).set(targetCol, null);
             }
         }
 
-        scanner.close();
+        // Destroy horizontal cells
+        if (targetRow >= 0 && targetRow < matrix.size()) {
+            for (int c = Math.max(0, targetCol - radius); c <= Math.min(matrix.get(targetRow).size() - 1, targetCol + radius); c++) {
+                matrix.get(targetRow).set(c, null);
+            }
+        }
+
+        // Cleanup matrix: remove null values and empty rows
+        for (int i = 0; i < matrix.size(); i++) {
+            matrix.get(i).removeIf(cell -> cell == null);
+            if (matrix.get(i).isEmpty()) {
+                matrix.remove(i);
+                i--; // Adjust index after removal
+            }
+        }
+    }
+
+    private static void printMatrix(List<List<Integer>> matrix) {
+        for (List<Integer> row : matrix) {
+            for (int i = 0; i < row.size(); i++) {
+                if (i > 0) {
+                    System.out.print(" ");
+                }
+                System.out.print(row.get(i));
+            }
+            System.out.println();
+        }
     }
 }
